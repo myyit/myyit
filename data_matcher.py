@@ -2,12 +2,27 @@ import pandas as pd
 import numpy as np
 import logging
 import jieba
+import os
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from typing import Dict, List, Tuple, Optional
 
+# 创建日志目录（如果不存在）
+log_dir = 'logs'
+if not os.path.exists(log_dir):
+    os.makedirs(log_dir)
+
 # 配置日志
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.StreamHandler(),  # 输出到控制台
+        logging.FileHandler(os.path.join(log_dir, 'data_matcher.log'), encoding='utf-8')  # 输出到文件
+    ]
+)
+
+logging.info(f"日志目录: {log_dir}")
 
 class DataMatcher:
     """自动化数据匹配与处理程序"""
@@ -280,6 +295,12 @@ class DataMatcher:
             
             # 生成统计数据
             overall_stats, unit_stats = self.generate_statistics()
+            
+            # 输出统计信息到日志
+            if not overall_stats.empty:
+                logging.info("=== 数据匹配统计结果 ===")
+                for _, row in overall_stats.iterrows():
+                    logging.info(f"{row['统计项']}: {row['数值']}")
             
             # 导出到Excel
             logging.info(f"导出结果到文件: {output_file}")
