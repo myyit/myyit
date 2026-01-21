@@ -22,7 +22,7 @@ class DataMatcher:
         self.vectorizer = None  # TF-IDF向量化器
         
         # 配置参数
-        self.unit_col = '单位'  # 单位列名
+        self.unit_col = '单位'  # 需要处理的单位列名
         self.project_col = '项目名'  # 项目名列名
         self.threshold = 0.5  # 匹配阈值
     
@@ -92,7 +92,7 @@ class DataMatcher:
         words = jieba.cut(text)
         # 移除停用词（简单实现）
         # 注意：保留"一期"、"二期"等项目阶段词汇，确保不同阶段项目被识别为不同项目
-        stopwords = {'的', '了', '和', '与', '等'}
+        stopwords = {'的', '了', '和', '与', '等', '项目'}
         filtered_words = [word for word in words if word not in stopwords and word.strip()]
         # 重新组合为字符串
         return " ".join(filtered_words)
